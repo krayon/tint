@@ -71,13 +71,13 @@
 
 /* Keys */
 char key_left   = 'j';
-char key_up     = 'k';
+char key_rotate = 'k';
 char key_right  = 'l';
-char key_down   = '\0';
+char key_lower  = '\0';
 char key_drop   = ' ';
 char key_next   = 'n';
 char key_shadow = 's';
-char key_dotted = 'd';
+char key_lines  = 'd';
 char key_level  = 'a';
 char key_quit   = 'q';
 char key_pause  = 'p';
@@ -173,20 +173,25 @@ static void drawnext (int shapenum,int x,int y)
 /* Draw the background */
 static void drawbackground ()
 {
+   int yoff = 7;
+
    out_setattr (ATTR_OFF);
    out_setcolor (COLOR_WHITE,COLOR_BLACK);
-   out_gotoxy (4,YTOP + 7);   out_printf ("H E L P");
-   out_gotoxy (1,YTOP + 9);   out_printf ("p: Pause");
-   out_gotoxy (1,YTOP + 10);  out_printf ("j: Left");
-   out_gotoxy (1,YTOP + 11);  out_printf ("l: Right");
-   out_gotoxy (1,YTOP + 12);  out_printf ("k: Rotate");
-   out_gotoxy (1,YTOP + 13);  out_printf ("n: Draw next");
-   out_gotoxy (1,YTOP + 14);  out_printf ("s: Draw shadow");
-   out_gotoxy (1,YTOP + 15);  out_printf ("d: Toggle lines");
-   out_gotoxy (1,YTOP + 16);  out_printf ("a: Speed up");
-   out_gotoxy (1,YTOP + 17);  out_printf ("q: Quit");
-   out_gotoxy (2,YTOP + 18);  out_printf ("SPACE: Drop");
-   out_gotoxy (3,YTOP + 20);  out_printf ("Next:");
+   out_gotoxy (4,YTOP + yoff++); out_printf ("H E L P");
+   ++yoff;
+   if (key_pause)  { out_gotoxy (1,YTOP + yoff++); out_printf ("%c: Pause"       , key_pause ); }
+   if (key_left)   { out_gotoxy (1,YTOP + yoff++); out_printf ("%c: Left"        , key_left  ); }
+   if (key_right)  { out_gotoxy (1,YTOP + yoff++); out_printf ("%c: Right"       , key_right ); }
+   if (key_rotate) { out_gotoxy (1,YTOP + yoff++); out_printf ("%c: Rotate"      , key_rotate); }
+   if (key_lower)  { out_gotoxy (1,YTOP + yoff++); out_printf ("%c: Lower"       , key_lower ); }
+   if (key_next)   { out_gotoxy (1,YTOP + yoff++); out_printf ("%c: Draw next"   , key_next  ); }
+   if (key_shadow) { out_gotoxy (1,YTOP + yoff++); out_printf ("%c: Draw shadow" , key_shadow); }
+   if (key_lines)  { out_gotoxy (1,YTOP + yoff++); out_printf ("%c: Toggle lines", key_lines ); }
+   if (key_level)  { out_gotoxy (1,YTOP + yoff++); out_printf ("%c: Speed up"    , key_level ); }
+   if (key_quit)   { out_gotoxy (1,YTOP + yoff++); out_printf ("%c: Quit"        , key_quit  ); }
+   if (key_drop)   { out_gotoxy (1,YTOP + yoff++); out_printf ("%c: Drop"        , key_drop  ); }
+   ++yoff;
+   out_gotoxy (3,YTOP + yoff++); out_printf ("Next:");
 }
 
 static int getsum ()
@@ -637,11 +642,11 @@ int main (int argc,char *argv[])
 		  {
 			if (ch == (int)key_left || ch == KEY_LEFT)
 				engine_move (&engine,ACTION_LEFT);
-			else if (ch == (int)key_up || ch == KEY_UP || ch == (int)'\n')
+			else if (ch == (int)key_rotate || ch == KEY_UP || ch == (int)'\n')
 				engine_move (&engine,ACTION_ROTATE);
 			else if (ch == (int)key_right || ch == KEY_RIGHT)
 				engine_move (&engine,ACTION_RIGHT);
-			else if (ch == (int)key_down || ch == KEY_DOWN)
+			else if (ch == (int)key_lower || ch == KEY_DOWN)
 				engine_move (&engine,ACTION_DOWN);
 			else if (ch == (int)key_drop)
 			  {
@@ -658,7 +663,7 @@ int main (int argc,char *argv[])
 				engine.shadow = shadow;
 			  }
 				/* toggle dotted lines */
-			else if (ch == (int)key_dotted)
+			else if (ch == (int)key_lines)
 				dottedlines = !dottedlines;
 				/* next level */
 			else if (ch == (int)key_level)
