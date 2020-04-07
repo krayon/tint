@@ -167,8 +167,8 @@ static void drawbackground ()
    out_gotoxy (1,YTOP + 10);  out_printf ("j: Left");
    out_gotoxy (1,YTOP + 11);  out_printf ("l: Right");
    out_gotoxy (1,YTOP + 12);  out_printf ("k: Rotate");
-   out_gotoxy (1,YTOP + 13);  out_printf ("s: Draw next");
-   out_gotoxy (1,YTOP + 14);  out_printf ("S: Draw shadow");
+   out_gotoxy (1,YTOP + 13);  out_printf ("n: Draw next");
+   out_gotoxy (1,YTOP + 14);  out_printf ("s: Draw shadow");
    out_gotoxy (1,YTOP + 15);  out_printf ("d: Toggle lines");
    out_gotoxy (1,YTOP + 16);  out_printf ("a: Speed up");
    out_gotoxy (1,YTOP + 17);  out_printf ("q: Quit");
@@ -645,11 +645,11 @@ int main (int argc,char *argv[])
 				  finished = evaluate(&engine);          /* prevent key press after drop */
 				  break;
 				  /* show next piece */
-				case 's':
+				case 'n':
 				  shownext = TRUE;
 				  break;
 				  /* show shadow */
-				case 'S':
+				case 's':
 				  shadow = TRUE;
 				  engine.shadow = shadow;
 				  break;
