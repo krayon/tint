@@ -168,11 +168,12 @@ static void drawbackground ()
    out_gotoxy (1,YTOP + 11);  out_printf ("l: Right");
    out_gotoxy (1,YTOP + 12);  out_printf ("k: Rotate");
    out_gotoxy (1,YTOP + 13);  out_printf ("s: Draw next");
-   out_gotoxy (1,YTOP + 14);  out_printf ("d: Toggle lines");
-   out_gotoxy (1,YTOP + 15);  out_printf ("a: Speed up");
-   out_gotoxy (1,YTOP + 16);  out_printf ("q: Quit");
-   out_gotoxy (2,YTOP + 17);  out_printf ("SPACE: Drop");
-   out_gotoxy (3,YTOP + 19);  out_printf ("Next:");
+   out_gotoxy (1,YTOP + 14);  out_printf ("S: Draw shadow");
+   out_gotoxy (1,YTOP + 15);  out_printf ("d: Toggle lines");
+   out_gotoxy (1,YTOP + 16);  out_printf ("a: Speed up");
+   out_gotoxy (1,YTOP + 17);  out_printf ("q: Quit");
+   out_gotoxy (2,YTOP + 18);  out_printf ("SPACE: Drop");
+   out_gotoxy (3,YTOP + 20);  out_printf ("Next:");
 }
 
 static int getsum ()
@@ -646,6 +647,11 @@ int main (int argc,char *argv[])
 				  /* show next piece */
 				case 's':
 				  shownext = TRUE;
+				  break;
+				  /* show shadow */
+				case 'S':
+				  shadow = TRUE;
+				  engine.shadow = shadow;
 				  break;
 				  /* toggle dotted lines */
 				case 'd':
