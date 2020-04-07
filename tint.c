@@ -69,6 +69,19 @@
 /* This calculates the real (displayed) value of the score */
 #define GETSCORE(score) ((score) / SCOREFACTOR)
 
+/* Keys */
+char key_left   = 'j';
+char key_up     = 'k';
+char key_right  = 'l';
+char key_down   = '\0';
+char key_drop   = ' ';
+char key_next   = 'n';
+char key_shadow = 's';
+char key_dotted = 'd';
+char key_level  = 'a';
+char key_quit   = 'q';
+char key_pause  = 'p';
+
 static bool shownext;
 static bool dottedlines;
 static bool shadow;
@@ -622,69 +635,59 @@ int main (int argc,char *argv[])
 		/* Check if user pressed a key */
 		if ((ch = in_getch ()) != ERR)
 		  {
-			 switch (ch)
-			   {
-				case 'j':
-				case KEY_LEFT:
-				  engine_move (&engine,ACTION_LEFT);
-				  break;
-				case 'k':
-				case KEY_UP:
-				case '\n':
-				  engine_move (&engine,ACTION_ROTATE);
-				  break;
-				case 'l':
-				case KEY_RIGHT:
-				  engine_move (&engine,ACTION_RIGHT);
-				  break;
-				case KEY_DOWN:
-				  engine_move (&engine,ACTION_DOWN);
-				  break;
-				case ' ':
-				  engine_move (&engine,ACTION_DROP);
-				  finished = evaluate(&engine);          /* prevent key press after drop */
-				  break;
-				  /* show next piece */
-				case 'n':
-				  shownext = TRUE;
-				  break;
-				  /* show shadow */
-				case 's':
-				  shadow = TRUE;
-				  engine.shadow = shadow;
-				  break;
-				  /* toggle dotted lines */
-				case 'd':
-				  dottedlines = !dottedlines;
-				  break;
-				  /* next level */
-				case 'a':
-				  if (level < MAXLEVEL)
-					{
-					   level++;
-					   in_timeout (DELAY);
-					}
-				  else out_beep ();
-				  break;
-				  /* quit */
-				case 'q':
+			if (ch == (int)key_left || ch == KEY_LEFT)
+				engine_move (&engine,ACTION_LEFT);
+			else if (ch == (int)key_up || ch == KEY_UP || ch == (int)'\n')
+				engine_move (&engine,ACTION_ROTATE);
+			else if (ch == (int)key_right || ch == KEY_RIGHT)
+				engine_move (&engine,ACTION_RIGHT);
+			else if (ch == (int)key_down || ch == KEY_DOWN)
+				engine_move (&engine,ACTION_DOWN);
+			else if (ch == (int)key_drop)
+			  {
+				engine_move (&engine,ACTION_DROP);
+				finished = evaluate(&engine);          /* prevent key press after drop */
+			  }
+				/* show next piece */
+			else if (ch == (int)key_next)
+				shownext = TRUE;
+				/* show shadow */
+			else if (ch == (int)key_shadow)
+			  {
+				shadow = TRUE;
+				engine.shadow = shadow;
+			  }
+				/* toggle dotted lines */
+			else if (ch == (int)key_dotted)
+				dottedlines = !dottedlines;
+				/* next level */
+			else if (ch == (int)key_level)
+			  {
+				if (level < MAXLEVEL)
+				  {
+					level++;
+					in_timeout (DELAY);
+				  }
+				else out_beep ();
+			  }
+				/* quit */
+			else if (ch == (int)key_quit)
 				  finished = TRUE;
-				  break;
-				  /* pause */
-				case 'p':
-				  out_setcolor (COLOR_WHITE,COLOR_BLACK);
-				  out_gotoxy ((out_width () - 34) / 2,out_height () - 2);
-				  out_printf ("Paused - Press any key to continue");
-				  while ((ch = in_getch ()) == ERR) ;	/* Wait for a key to be pressed */
-				  in_flush ();							/* Clear keyboard buffer */
-				  out_gotoxy ((out_width () - 34) / 2,out_height () - 2);
-				  out_printf ("                                  ");
-				  break;
-				  /* unknown keypress */
-				default:
-				  out_beep ();
-			   }
-			 in_flush ();
+				/* pause */
+			else if (ch == (int)key_pause)
+			  {
+				out_setcolor (COLOR_WHITE,COLOR_BLACK);
+				out_gotoxy ((out_width () - 34) / 2,out_height () - 2);
+				out_printf ("Paused - Press any key to continue");
+				while ((ch = in_getch ()) == ERR) ;	/* Wait for a key to be pressed */
+				in_flush ();							/* Clear keyboard buffer */
+				out_gotoxy ((out_width () - 34) / 2,out_height () - 2);
+				out_printf ("                                  ");
+			  }
+				/* unknown keypress */
+			else
+				out_beep ();
+			in_flush ();
 		  }
 		else
 		  finished = evaluate(&engine);
